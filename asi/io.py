@@ -1,4 +1,5 @@
-import numpy as np
+import numpy as np  # noqa: A005
+
 from .envi import parse_envi_header
 
 
@@ -6,7 +7,7 @@ def load_spectral_image(file_stem: str) -> tuple[np.ndarray, dict[str, str]]:
     """Loads spectral image from ENVI format."""
     # Load ENVI header
     hdr_file = file_stem + ".hdr"
-    with open(hdr_file, "r") as f:
+    with open(hdr_file, encoding="utf-8") as f:
         lines = f.readlines()
     envi_header = parse_envi_header(lines)
 

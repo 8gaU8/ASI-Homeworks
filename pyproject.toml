@@ -22,6 +22,10 @@ ignore = [
     "D401",
     "DOC",
     "ANN",
+    "FA",
+    "D",
+    "PTH123",
+
 
 ]
 unfixable = [
