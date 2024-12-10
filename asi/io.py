@@ -8,13 +8,14 @@ def load_spectral_image(file_stem: str) -> tuple[np.ndarray, dict[str, str]]:
     # Load ENVI header
     hdr_file = file_stem + ".hdr"
     with open(hdr_file, encoding="utf-8") as f:
-        lines = f.readlines()
-    envi_header = parse_envi_header(lines)
+        header_content = f.readlines()
+    envi_header = parse_envi_header(header_content)
 
     # Load parameters
-    hdr_lines = int(envi_header["lines"])
-    hdr_samples = int(envi_header["samples"])
-    hdr_bands = int(envi_header["bands"])
+    interleave = str(envi_header["interleave"])
+    lines = int(envi_header["lines"])
+    samples = int(envi_header["samples"])
+    bands = int(envi_header["bands"])
 
     # Load raw data
     raw_file = file_stem + ".raw"
@@ -22,7 +23,16 @@ def load_spectral_image(file_stem: str) -> tuple[np.ndarray, dict[str, str]]:
         raw = np.fromfile(f, dtype=np.uint16)
 
     # Reshape 1D to 3D. The order 'lines, bands, samples' for interleave = BIL case
-    new_shape: tuple[int, int, int] = (hdr_lines, hdr_bands, hdr_samples)
+    if interleave.upper() == "BIL":
+        new_shape = (lines, bands, samples)
+    elif interleave.upper() == "BIP":
+        new_shape = (lines, samples, bands)
+    elif interleave.upper() == "BSQ":
+        new_shape = (bands, samples, lines)
+    else:
+        msg = f"Interleave {interleave} not supported."
+        raise ValueError(msg)
+
     spectral_image = raw.reshape(new_shape)
 
     return spectral_image, envi_header
