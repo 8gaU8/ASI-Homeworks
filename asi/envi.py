@@ -1,5 +1,11 @@
+# Author: Yuya HAGA
+
+
 def parse_envi_header(lines: list) -> dict[str, str]:
-    """Parses ENVI file content into a structured dictionary"""
+    """
+    Parses ENVI file content into a structured dictionary
+    This code was written with Github Copilot
+    """
     envi_data = {}
     in_block_key = None
 

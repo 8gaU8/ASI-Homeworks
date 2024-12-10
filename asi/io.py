@@ -1,4 +1,6 @@
-import numpy as np  # noqa: A005
+# Author: Yuya HAGA
+
+import numpy as np
 
 from .envi import parse_envi_header
 
@@ -22,22 +24,22 @@ def load_spectral_image(file_stem: str) -> tuple[np.ndarray, dict[str, str]]:
     with open(raw_file, "rb") as f:
         raw = np.fromfile(f, dtype=np.uint16)
 
-    # Reshape 1D to 3D. The order 'lines, bands, samples' for interleave = BIL case
+    # define shape and transpose order by interleave method
     if interleave.upper() == "BIL":
         new_shape = (lines, bands, samples)
-        transpose_order = (0, 2, 1)
+        axis_order = (0, 2, 1)
     elif interleave.upper() == "BIP":
         new_shape = (lines, samples, bands)
-        transpose_order = (0, 1, 2)
+        axis_order = (0, 1, 2)
     elif interleave.upper() == "BSQ":
         new_shape = (bands, samples, lines)
-        transpose_order = (0, 2, 1)
+        axis_order = (0, 2, 1)
     else:
         msg = f"Interleave {interleave} not supported."
         raise ValueError(msg)
 
     spectral_image = raw.reshape(new_shape)
     # change axis order to 'lines, samples, bands'
-    spectral_image = np.transpose(spectral_image, transpose_order)
+    spectral_image = np.transpose(spectral_image, axis_order)
 
     return spectral_image, envi_header

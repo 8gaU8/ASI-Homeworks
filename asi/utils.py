@@ -1,3 +1,5 @@
+# Author: Yuya HAGA
+
 import numpy as np
 
 

@@ -19,7 +19,6 @@ def reconstruct_rgb(
     rgb_view = np.empty((lines, samples, 3))
     # Reconstruct RGB image
     for idx, ch in enumerate(rgb_indeces):
-        print(idx, ch)
         rgb_view[:, :, idx] = spectral_image[:, :, ch] / np.amax(spectral_image[:, :, ch])
     return rgb_view
 

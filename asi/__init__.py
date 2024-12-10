@@ -1,3 +1,4 @@
+# Author: Yuya HAGA
 from .draw import draw_multi_crosss, reconstruct_rgb
 from .envi import parse_envi_header
 from .io import load_spectral_image
