@@ -15,11 +15,12 @@ def reconstruct_rgb(
     rgb_indeces = [search_closest_index(wavelengths, wl) for wl in rgb_wavelengths]
 
     # Prepare RGB view placeholder
-    lines, _bands, samples = spectral_image.shape
+    lines, samples, _bands = spectral_image.shape
     rgb_view = np.empty((lines, samples, 3))
     # Reconstruct RGB image
     for idx, ch in enumerate(rgb_indeces):
-        rgb_view[:, :, idx] = spectral_image[:, ch, :] / np.amax(spectral_image[:, ch, :])
+        print(idx, ch)
+        rgb_view[:, :, idx] = spectral_image[:, :, ch] / np.amax(spectral_image[:, :, ch])
     return rgb_view
 
 
