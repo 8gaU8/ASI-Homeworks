@@ -1,6 +1,9 @@
 # Author: Yuya HAGA
 
 
+from pathlib import Path
+
+
 def parse_envi_header(lines: list) -> dict[str, str]:
     """
     Parses ENVI file content into a structured dictionary
@@ -49,3 +52,11 @@ def parse_envi_header(lines: list) -> dict[str, str]:
                 # Single-line value
                 envi_data[key] = value
     return envi_data
+
+
+def load_envi_header(hdr_file: Path) -> dict[str, str]:
+    """Loads ENVI header file."""
+    with hdr_file.open(encoding="utf-8") as f:
+        header_content = f.readlines()
+    envi_header = parse_envi_header(header_content)
+    return envi_header

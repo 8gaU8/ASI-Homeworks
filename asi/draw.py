@@ -1,5 +1,6 @@
 # Author: Yuya HAGA
 
+
 import cv2
 import numpy as np
 
@@ -8,15 +9,31 @@ from .utils import search_closest_index
 
 def reconstruct_rgb(
     spectral_image: np.ndarray,
-    envi_header: dict[str, str],
+    wavelengths: list[float],
     rgb_wavelengths: tuple[float, float, float] = (632.15, 528.03, 443.56),
 ):
     """Reconstructs RGB image from spectral image with given three wavelengths."""
     # Get wavelengths from header
-    wavelengths = [float(data) for data in envi_header["wavelength"].split(",")]
     rgb_indeces = [search_closest_index(wavelengths, wl) for wl in rgb_wavelengths]
 
     # Prepare RGB view placeholder
+    lines, samples, _bands = spectral_image.shape
+    rgb_view = np.empty((lines, samples, 3))
+    # Reconstruct RGB image
+    for idx, ch in enumerate(rgb_indeces):
+        rgb_view[:, :, idx] = spectral_image[:, :, ch] / np.amax(spectral_image[:, :, ch])
+    return rgb_view
+
+
+def reconstruct_rgb_envi(
+    spectral_image: np.ndarray,
+    envi_header: dict[str, str],
+    rgb_wavelengths: tuple[float, float, float] = (632.15, 528.03, 443.56),
+):
+    # """Reconstructs RGB image from spectral image with given three wavelengths."""
+    # # Get wavelengths from header
+    wavelengths = [float(data) for data in envi_header["wavelength"].split(",")]
+    rgb_indeces = [search_closest_index(wavelengths, wl) for wl in rgb_wavelengths]
     lines, samples, _bands = spectral_image.shape
     rgb_view = np.empty((lines, samples, 3))
     # Reconstruct RGB image
