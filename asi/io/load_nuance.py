@@ -9,7 +9,7 @@ def load_nuance_image(tiff_root: Path) -> tuple[np.ndarray, list[float]]:
     wavelengths: list[float] = []
     imgs = []
     tiff_list = list(tiff_root.glob("*.tif"))
-    tiff_list = natsorted(tiff_list, reverse=True)
+    tiff_list = natsorted(tiff_list, reverse=False)
     for tiff_path in tiff_list:
         img = tiff.imread(tiff_path)
         wavelength = float(tiff_path.stem.split("_")[-1])

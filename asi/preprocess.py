@@ -34,7 +34,7 @@ def white_correction_sq(
     spectral_image: np.ndarray,
     white_pos: tuple[slice, slice],
 ) -> np.ndarray:
-    white_sq = spectral_image[white_pos]
+    white_sq = spectral_image[white_pos].copy()
     whiteref = white_sq.mean((0, 1))
-    spectral_image = spectral_image / whiteref
-    return spectral_image
+    white_corrected = spectral_image / whiteref
+    return white_corrected

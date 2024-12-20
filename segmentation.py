@@ -70,6 +70,7 @@ def plot_segmentation_results(
         rgb_view = reconstruct_rgb_envi(spectral_image, envi_header)
     else:
         rgb_view = reconstruct_gray_rgb(spectral_image)
+    rgb_view *= 3
 
     # calulate all we need
     selected_spectra = get_selected_spectra(spectral_image, select_pos)
@@ -83,7 +84,6 @@ def plot_segmentation_results(
 
     # plot selected region
     masked_rgb = select_area(rgb_view, select_pos)
-    masked_rgb *= 1.5
     masked_rgb = masked_rgb.clip(0, 1)
     org_ax.imshow(masked_rgb)
     org_ax.set_title("Selected region")

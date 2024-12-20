@@ -30,7 +30,8 @@ def get_score(im: np.ndarray) -> int:
 
 
 def load_tunable_image(
-    tunable_root: Path, white_pos: tuple[slice, slice]
+    tunable_root: Path,
+    white_pos: tuple[slice, slice],
 ) -> tuple[np.ndarray, list[int]]:
     png_list = list(tunable_root.glob("*.png"))
     channels = {parse_png_path(p)[1] for p in png_list}
