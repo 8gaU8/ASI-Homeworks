@@ -21,7 +21,9 @@ def reconstruct_rgb(
     rgb_view = np.empty((lines, samples, 3))
     # Reconstruct RGB image
     for idx, ch in enumerate(rgb_indeces):
-        rgb_view[:, :, idx] = spectral_image[:, :, ch] / np.amax(spectral_image[:, :, ch])
+        rgb_view[:, :, idx] = spectral_image[:, :, ch] / np.amax(
+            spectral_image[:, :, ch]
+        )
     return rgb_view
 
 
@@ -38,13 +40,15 @@ def reconstruct_rgb_envi(
     rgb_view = np.empty((lines, samples, 3))
     # Reconstruct RGB image
     for idx, ch in enumerate(rgb_indeces):
-        rgb_view[:, :, idx] = spectral_image[:, :, ch] / np.amax(spectral_image[:, :, ch])
+        rgb_view[:, :, idx] = spectral_image[:, :, ch] / np.amax(
+            spectral_image[:, :, ch]
+        )
     return rgb_view
 
 
-def draw_cross(rgb_view: np.ndarray, position: tuple[int, int]):
+def draw_cross(rgb: np.ndarray, position: tuple[int, int]):
     """Draws cross on RGB view at given position"""
-    img = rgb_view.copy()
+    img = rgb.copy()
     img = cv2.drawMarker(
         img,
         position,
@@ -54,20 +58,27 @@ def draw_cross(rgb_view: np.ndarray, position: tuple[int, int]):
         thickness=10,
         line_type=cv2.LINE_8,
     )
+    img = cv2.drawMarker(
+        img,
+        position,
+        color=(0, 0, 0),
+        markerType=cv2.MARKER_CROSS,
+        markerSize=45,
+        thickness=5,
+        line_type=cv2.LINE_4,
+    )
     return img
 
 
-def draw_multi_crosss(rgb_view: np.ndarray, positions: list[tuple[int, int]]):
+def draw_multi_crosss(img: np.ndarray, positions: list[tuple[int, int]]):
     """Draws multiple cross on RGB view at given positions"""
-    img = rgb_view.copy()
+
     for position in positions:
-        img = cv2.drawMarker(
-            img,
-            position,
-            color=(1, 1, 1),
-            markerType=cv2.MARKER_CROSS,
-            markerSize=50,
-            thickness=10,
-            line_type=cv2.LINE_8,
-        )
+        img = draw_cross(img, position)
     return img
+
+
+def select_area(rgb_view: np.ndarray, select_pos: tuple[slice, slice]) -> np.ndarray:
+    _rgb_view = rgb_view.copy()
+    _rgb_view[select_pos] = [1, 0, 0]
+    return _rgb_view

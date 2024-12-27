@@ -19,8 +19,8 @@ def parse_png_path(path: Path) -> tuple[str, int, float]:
     return name, ch_id, exp_id
 
 
-def gen_template(ch: int) -> str:
-    return f"*ch {ch},*.png"
+def gen_template(name: str, ch: int) -> str:
+    return f"{name}, ch {ch}, exp * ms.png"
 
 
 def get_score(im: np.ndarray) -> int:
@@ -30,22 +30,21 @@ def get_score(im: np.ndarray) -> int:
 
 
 def load_tunable_image(
-    tunable_root: Path,
-    white_pos: tuple[slice, slice],
+    tunable_root: Path, name: str, white_pos: tuple[slice, slice]
 ) -> tuple[np.ndarray, list[int]]:
     png_list = list(tunable_root.glob("*.png"))
     channels = {parse_png_path(p)[1] for p in png_list}
     channels = sorted(channels)
-
     imgs = []
-    best_im = None
-    # scoreが最小の画像を選ぶ
-    best_score = 1e9
+    # chose minimum score image
     for ch in channels:
-        template = gen_template(ch)
+        best_im = None
+        best_score = 1e9
+        template = gen_template(name, ch)
         for png_path in tunable_root.glob(template):
+            # Select minimum score image. Score is calculated from number of unvalid pixels
             im = cv2.imread(str(png_path), cv2.IMREAD_GRAYSCALE)
-            if im[white_pos[0], white_pos[1]].max() == MAX_PIXEL_VALUE:
+            if im[white_pos].max() == MAX_PIXEL_VALUE:
                 continue
             score = get_score(im)
             if score < best_score:
@@ -54,7 +53,6 @@ def load_tunable_image(
         if best_im is None:
             msg = f"Channel {ch} not found."
             raise ValueError(msg)
-
         imgs.append(best_im)
 
     spectral_image = np.stack(imgs, axis=-1)
