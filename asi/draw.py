@@ -82,3 +82,15 @@ def select_area(rgb_view: np.ndarray, select_pos: tuple[slice, slice]) -> np.nda
     _rgb_view = rgb_view.copy()
     _rgb_view[select_pos] = [1, 0, 0]
     return _rgb_view
+
+
+def reconstruct_gray_view(spectral_image):
+    channels = spectral_image.shape[2]
+    ch_idx = channels // 2
+
+    gray_view = spectral_image[..., ch_idx].copy()
+    gray_view = gray_view.clip(0, 1)
+    gray_view = np.stack((gray_view, gray_view, gray_view), axis=-1)
+    gray_view = gray_view.astype(np.float32)
+
+    return gray_view

@@ -18,4 +18,4 @@ def load_nuance_image(tiff_root: Path) -> tuple[np.ndarray, list[float]]:
 
     spectral_image = np.stack(imgs, axis=-1)
     spectral_image = spectral_image.astype(np.float64)
-    return spectral_image, wavelengths
+    return spectral_image, wavelengths[::-1]
