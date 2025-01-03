@@ -1,15 +1,27 @@
-# ASI Homework
+# Python module `asi` for Advanced Spectral Imaging cource
 
-## `/asi`
 
-Python module for advanced spectral imaging including parsing ENVI header file, load spectral image like FreeLook, and make RGB preview of spectral image.
+A Python module for advanced spectral imaging including parsing ENVI header file, load spectral image like FreeLook, and make RGB preview of spectral image.
 
-### Usage
+## Structure
+
+- `/asi.io`
+  - Scripts to load various spctral image formats, such as ENVI, Nuance Camera, and Tunable Light Source Camera
+- `/asi.path_config`
+  - Path configuration file
+  - TODO: this file should be exported from the repository
+- `/asi.preprocess`
+  - White and dark correction
+- `/segmentation.py`
+  - Some scipts for segment by spectra.
+  - TODO: this file should be included in `asi.postprocess` or `asi.segmentation`
+
+## Usage
 
 - import module
   - `import asi`
 
-- load spectral image and show RGB
+- Load spectral image and show RGB
 
 ```python
 import matplotlib.pyplot as plt
@@ -22,7 +34,7 @@ plt.imshow(rgb_view)
 
 ```
 
-- Load and do white correction
+- Load and apply white correction
 
 ```python
 import asi
